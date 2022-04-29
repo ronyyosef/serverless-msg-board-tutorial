@@ -1,0 +1,211 @@
+service: msg-board
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-west-2
+  runtime: python3.8
+
+custom:
+  MsgBoardTable: msg-board-table
+
+functions:
+  GetMsgBoardList:
+    handler: get_msg_board_list.lambda_handler
+    role: GetMsgBoardListRole
+    environment:
+      MSG_BOARD_TABLE_NAME: ${self:custom.MsgBoardTable}
+    events:
+      - http:
+          path: msg-board
+          method: GET
+          integration: lambda
+
+  GetMsgBoardItem:
+    handler: get_msg_board_item.lambda_handler
+    role: GetMsgBoardListRole
+    environment:
+      MSG_BOARD_TABLE_NAME: ${self:custom.MsgBoardTable}
+    events:
+      - http:
+          path: msg-board/{pk}
+          method: GET
+          integration: lambda
+          request:
+            parameters:
+              paths:
+                pk: true
+
+  PostMsgBoard:
+    handler: post_msg_board.lambda_handler
+    role: PostMsgBoardRole
+    environment:
+      MSG_BOARD_TABLE_NAME: ${self:custom.MsgBoardTable}
+    events:
+      - http:
+          path: msg-board
+          method: POST
+          integration: lambda
+
+  UpdateMsgBoard:
+    handler: update_msg_board.lambda_handler
+    role: UpdateMsgBoardRole
+    environment:
+      MSG_BOARD_TABLE_NAME: ${self:custom.MsgBoardTable}
+    events:
+      - http:
+          path: msg-board/{pk}
+          method: PUT
+          integration: lambda
+          request:
+            parameters:
+              paths:
+                pk: true
+
+  DeleteMsgBoard:
+    handler: delete_msg_board.lambda_handler
+    role: DeleteMsgBoardRole
+    environment:
+      MSG_BOARD_TABLE_NAME: ${self:custom.MsgBoardTable}
+    events:
+      - http:
+          path: msg-board/{pk}
+          method: DELETE
+          integration: lambda
+          request:
+            parameters:
+              paths:
+                pk: true
+
+
+resources:
+  Resources:
+    MsgBoardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "pk"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "pk"
+            KeyType: "HASH"
+        BillingMode: PAY_PER_REQUEST
+        TableName:  ${self:custom.MsgBoardTable}
+
+    GetMsgBoardItemRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: Policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:GetItem
+                  Resource:
+                    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.MsgBoardTable}
+
+    GetMsgBoardListRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: Policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:Query
+                    - dynamodb:GetItem
+                    - dynamodb:Scan
+                  Resource:
+                    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.MsgBoardTable}
+
+    PostMsgBoardRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: Policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:PutItem
+                  Resource:
+                    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.MsgBoardTable}
+
+    UpdateMsgBoardRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: Policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:UpdateItem
+                  Resource:
+                    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.MsgBoardTable}
+
+    DeleteMsgBoardRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: Policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:DeleteItem
+                  Resource:
+                    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.MsgBoardTable}
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!env/**'
+    - 'README.md'
