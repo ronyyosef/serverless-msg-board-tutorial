@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "66dab562-aecc-4c3d-b6c0-ac539ed9c45b",
+		"name": "MsgBoard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PostMsgBoard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"msg\": \"This is a message\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/msg-board",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"msg-board"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMsgBoardList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/msg-board",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"msg-board"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMsgBoardItem",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/msg-board/33b86c16-32fa-4761-97ef-d27f8d2d5569",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"msg-board",
+						"33b86c16-32fa-4761-97ef-d27f8d2d5569"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateMsgBoard",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"msg\": \"This is the message after update\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/msg-board/33b86c16-32fa-4761-97ef-d27f8d2d5569",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"msg-board",
+						"33b86c16-32fa-4761-97ef-d27f8d2d5569"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMsgBoard",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/msg-board/33b86c16-32fa-4761-97ef-d27f8d2d5569",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"msg-board",
+						"33b86c16-32fa-4761-97ef-d27f8d2d5569"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://5l592v8bni.execute-api.us-west-2.amazonaws.com/dev\n",
+			"type": "string"
+		},
+		{
+			"key": "msg_id",
+			"value": "msg_id"
+		}
+	]
+}
